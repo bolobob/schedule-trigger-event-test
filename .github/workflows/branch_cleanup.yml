@@ -15,8 +15,14 @@ jobs:
       - name: Delete branches
         run: |
           git fetch origin
-          for branch in $(git branch -r | grep 'origin/deploy/int'); do
-            git push --delete origin ${branch#origin/}
+          TWO_WEEKS_AGO=$(date -d "2 weeks ago" +%s)
+          for branch in $(git branch -r | grep 'origin/deploy/int' | sed 's/origin\///'); do
+            LAST_COMMIT_DATE=$(git show -s --format="%ci" $branch | head -n 1)
+            LAST_COMMIT_DATE_EPOCH=$(date -d "$LAST_COMMIT_DATE" +%s)
+
+            if [ $LAST_COMMIT_DATE_EPOCH -lt $TWO_WEEKS_AGO ]; then
+              git push origin --delete $branch
+            fi
           done
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
