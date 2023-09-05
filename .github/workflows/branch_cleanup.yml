@@ -2,7 +2,7 @@ name: Daily Branch Cleanup
 
 on:
   schedule:
-    - cron: '* * * * *' # 毎日0時に実行
+    - cron: '0 0 * * *' # 毎日0時に実行
 
 jobs:
   cleanup:
