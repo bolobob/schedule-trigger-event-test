@@ -1,0 +1,22 @@
+name: Daily Branch Cleanup
+
+on:
+  schedule:
+    - cron: '* * * * *' # 毎日0時に実行
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Delete branches
+        run: |
+          git fetch origin
+          for branch in $(git branch -r | grep 'origin/deploy/int'); do
+            git push --delete origin ${branch#origin/}
+          done
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
