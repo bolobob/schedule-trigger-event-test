@@ -1,9 +1,8 @@
 name: Daily Branch Cleanup
 
 on:
-  workflow_dispatch:
-  #schedule:
-    #- cron: '0 0 * * *' # 毎日0時に実行
+  schedule:
+    - cron: '0 0 * * *' # 毎日0時に実行
 
 jobs:
   cleanup:
