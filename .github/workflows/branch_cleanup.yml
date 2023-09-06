@@ -18,7 +18,9 @@ jobs:
           TWO_WEEKS_AGO=$(date -d "12 hours ago" +%s)
           for branch in $(git branch -r | grep 'origin/deploy/int' | sed 's/origin\///'); do
             LAST_COMMIT_DATE=$(git show -s --format="%ci" $branch | head -n 1)
+            echo $LAST_COMMIT_DATE
             LAST_COMMIT_DATE_EPOCH=$(date -d "$LAST_COMMIT_DATE" +%s)
+            echo $LAST_COMMIT_DATE_EPOCH
 
             if [ $LAST_COMMIT_DATE_EPOCH -lt $TWO_WEEKS_AGO ]; then
               git push origin --delete $branch
