@@ -21,7 +21,7 @@ jobs:
             echo $branch
             echo $(git show -s --format="%ci" origin/$branch)
             echo $(git show -s --format="%ci" origin/$branch | head -n 1)
-            LAST_COMMIT_DATE=$(git show -s --format="%ci" $branch | head -n 1)
+            LAST_COMMIT_DATE=$(git show -s --format="%ci" origin/$branch | head -n 1)
             LAST_COMMIT_DATE_EPOCH=$(date -d "$LAST_COMMIT_DATE" +%s)
             echo $LAST_COMMIT_DATE
             echo $LAST_COMMIT_DATE_EPOCH
