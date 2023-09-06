@@ -20,6 +20,7 @@ jobs:
           for branch in $(git branch -r | grep 'origin/deploy/int' | sed 's/origin\///'); do
             LAST_COMMIT_DATE=$(git show -s --format="%ci" $branch | head -n 1)
             LAST_COMMIT_DATE_EPOCH=$(date -d "$LAST_COMMIT_DATE" +%s)
+            echo $LAST_COMMIT_DATE
             echo $LAST_COMMIT_DATE_EPOCH
             echo $TWO_WEEKS_AGO
 
