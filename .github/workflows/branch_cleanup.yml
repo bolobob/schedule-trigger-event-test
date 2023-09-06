@@ -3,7 +3,7 @@ name: Daily Branch Cleanup
 on:
   workflow_dispatch:
   #schedule:
-    #- cron: '* * * * *' # 毎日0時に実行
+    #- cron: '0 0 * * *' # 毎日0時に実行
 
 jobs:
   cleanup:
@@ -16,16 +16,10 @@ jobs:
       - name: Delete branches
         run: |
           git fetch origin
-          TWO_WEEKS_AGO=$(date -d "12 hours ago" +%s)
+          TWO_WEEKS_AGO=$(date -d "2 weeks ago" +%s)
           for branch in $(git branch -r | grep 'origin/deploy/int' | sed 's/origin\///'); do
-            echo $branch
-            echo $(git show -s --format="%ci" origin/$branch)
-            echo $(git show -s --format="%ci" origin/$branch | head -n 1)
             LAST_COMMIT_DATE=$(git show -s --format="%ci" origin/$branch | head -n 1)
             LAST_COMMIT_DATE_EPOCH=$(date -d "$LAST_COMMIT_DATE" +%s)
-            echo $LAST_COMMIT_DATE
-            echo $LAST_COMMIT_DATE_EPOCH
-            echo $TWO_WEEKS_AGO
 
             if [ $LAST_COMMIT_DATE_EPOCH -lt $TWO_WEEKS_AGO ]; then
               git push origin --delete $branch
