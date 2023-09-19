@@ -2,7 +2,7 @@ name: Daily Branch Cleanup
 
 on:
   schedule:
-    - cron: '0 0 * * *' # 毎日0時に実行
+    - cron: '* * * * *' # 毎日0時に実行
 
 jobs:
   cleanup:
@@ -10,20 +10,11 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: Delete branches
-        run: |
-          git fetch origin
-          TWO_WEEKS_AGO=$(date -d "2 weeks ago" +%s)
-          for branch in $(git branch -r | grep 'origin/deploy/int' | sed 's/origin\///'); do
-            LAST_COMMIT_DATE=$(git show -s --format="%ci" origin/$branch | head -n 1)
-            LAST_COMMIT_DATE_EPOCH=$(date -d "$LAST_COMMIT_DATE" +%s)
+      - name: Cleanup deploy branches
+        run: "${GITHUB_WORKSPACE}/.github/workflows/cleanup_deploy_branch.sh"
 
-            if [ $LAST_COMMIT_DATE_EPOCH -lt $TWO_WEEKS_AGO ]; then
-              git push origin --delete $branch
-            fi
-          done
         env:
           TZ: 'Asia/Tokyo'
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
